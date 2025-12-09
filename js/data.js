@@ -7,8 +7,8 @@ const THERAPY_PRICES = {
     'Terahertz': 400
 };
 
-// API Base URL
-const API_BASE = '';
+// API Base URL - Update this to match your server URL
+const API_BASE = 'http://localhost:3000';
 
 // Helper function to get auth token
 function getAuthToken() {
