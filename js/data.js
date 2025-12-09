@@ -246,26 +246,26 @@ async function getAttendanceByDate(customerId, date) {
 }
 
 // Statistics Functions
-function getCustomerStats(customerId) {
-    const records = getAttendanceRecords({ customerId });
+async function getCustomerStats(customerId) {
+    const records = await getAttendanceRecords({ customerId });
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
-    
+
     // Current month records
     const currentMonthRecords = records.filter(r => {
         const recordDate = new Date(r.date);
-        return recordDate.getMonth() === currentMonth && 
+        return recordDate.getMonth() === currentMonth &&
                recordDate.getFullYear() === currentYear;
     });
-    
+
     // Calculate totals
     const totalSessions = currentMonthRecords.length;
     const totalCost = currentMonthRecords.reduce((sum, r) => sum + r.price, 0);
-    
+
     // Last visit
     const lastVisit = records.length > 0 ? records[0].date : null;
-    
+
     return {
         totalSessions,
         totalCost,
@@ -352,14 +352,14 @@ async function getRevenueBreakdown(month, year) {
 }
 
 // Export Functions
-function getMonthlyInvoiceData(customerId, month, year) {
-    const customer = getUserById(customerId);
-    const records = getAttendanceRecords({
+async function getMonthlyInvoiceData(customerId, month, year) {
+    const customer = await getUserById(customerId);
+    const records = await getAttendanceRecords({
         customerId,
         month,
         year
     });
-    
+
     // Group records by date
     const recordsByDate = {};
     records.forEach(record => {
@@ -368,7 +368,7 @@ function getMonthlyInvoiceData(customerId, month, year) {
         }
         recordsByDate[record.date].push(record);
     });
-    
+
     const invoiceData = {
         customer,
         month,
@@ -379,7 +379,7 @@ function getMonthlyInvoiceData(customerId, month, year) {
         totalAmount: records.reduce((sum, r) => sum + r.price, 0),
         generatedAt: new Date().toISOString()
     };
-    
+
     return invoiceData;
 }
 

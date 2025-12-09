@@ -47,12 +47,12 @@ function displayCurrentMonth() {
     document.getElementById('currentMonthDisplay').textContent = `${monthName} ${year}`;
 }
 
-function loadAttendanceCalendar() {
+async function loadAttendanceCalendar() {
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
-    
-    const records = getAttendanceRecords({
+
+    const records = await getAttendanceRecords({
         customerId: currentUser.id,
         month: currentMonth,
         year: currentYear
@@ -199,9 +199,9 @@ function setupExportButton() {
     }
 }
 
-function exportMonthlyInvoice() {
+async function exportMonthlyInvoice() {
     const previousMonth = getPreviousMonth();
-    const invoiceData = getMonthlyInvoiceData(
+    const invoiceData = await getMonthlyInvoiceData(
         currentUser.id,
         previousMonth.month,
         previousMonth.year
