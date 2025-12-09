@@ -98,9 +98,14 @@ function logoutUser() {
     localStorage.removeItem('currentUser');
 }
 
-function getAllCustomers() {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    return users.filter(user => user.role === 'customer');
+async function getAllCustomers() {
+    try {
+        const users = await apiCall('/api/users');
+        return users.filter(user => user.role === 'customer');
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        return [];
+    }
 }
 
 function getUserById(userId) {
@@ -234,26 +239,26 @@ function getCustomerStats(customerId) {
     };
 }
 
-function getTherapistStats() {
-    const customers = getAllCustomers();
+async function getTherapistStats() {
+    const customers = await getAllCustomers();
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
-    
+
     let totalSessions = 0;
     let totalRevenue = 0;
-    
-    customers.forEach(customer => {
-        const records = getAttendanceRecords({
-            customerId: customer.id,
+
+    for (const customer of customers) {
+        const records = await getAttendanceRecords({
+            customerId: customer._id || customer.id,
             month: currentMonth,
             year: currentYear
         });
-        
+
         totalSessions += records.length;
         totalRevenue += records.reduce((sum, r) => sum + r.price, 0);
-    });
-    
+    }
+
     return {
         totalClients: customers.length,
         totalSessions,
