@@ -50,52 +50,70 @@ function generateRecordId() {
 }
 
 // User Management Functions
-function registerUser(userData) {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    
-    // Check if email already exists
-    if (users.some(user => user.email === userData.email)) {
-        return { success: false, message: 'Email already registered' };
+async function registerUser(userData) {
+    try {
+        const response = await apiCall('/api/register', {
+            method: 'POST',
+            body: JSON.stringify(userData)
+        });
+
+        // Store auth token
+        if (response.token) {
+            localStorage.setItem('authToken', response.token);
+        }
+
+        return {
+            success: true,
+            message: 'Registration successful',
+            user: response.user
+        };
+    } catch (error) {
+        return { success: false, message: error.message };
     }
-    
-    const newUser = {
-        id: 'customer-' + Date.now(),
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-        phone: userData.phone,
-        role: 'customer', // Always customer for new registrations
-        createdAt: new Date().toISOString()
-    };
-    
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    
-    return { success: true, message: 'Registration successful', user: newUser };
 }
 
-function loginUser(email, password) {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        // Store current user session
-        const sessionUser = { ...user };
-        delete sessionUser.password; // Don't store password in session
-        localStorage.setItem('currentUser', JSON.stringify(sessionUser));
-        return { success: true, user: sessionUser };
+async function loginUser(email, password) {
+    try {
+        const response = await apiCall('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+
+        // Store auth token
+        if (response.token) {
+            localStorage.setItem('authToken', response.token);
+        }
+
+        return {
+            success: true,
+            user: response.user
+        };
+    } catch (error) {
+        return { success: false, message: error.message };
     }
-    
-    return { success: false, message: 'Invalid email or password' };
 }
 
 function getCurrentUser() {
-    const userStr = localStorage.getItem('currentUser');
-    return userStr ? JSON.parse(userStr) : null;
+    const token = getAuthToken();
+    if (!token) return null;
+
+    try {
+        // Decode JWT token to get user info (simple decode, not verify)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return {
+            id: payload.id,
+            name: payload.name,
+            email: payload.email,
+            role: payload.role
+        };
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+    }
 }
 
 function logoutUser() {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken');
 }
 
 async function getAllCustomers() {
@@ -119,9 +137,15 @@ async function deleteUser(userId) {
     }
 }
 
-function getUserById(userId) {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    return users.find(user => user.id === userId);
+async function getUserById(userId) {
+    try {
+        // For customers, we can get from the users list
+        const users = await apiCall('/api/users');
+        return users.find(user => user._id === userId || user.id === userId);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return null;
+    }
 }
 
 // Attendance Record Functions

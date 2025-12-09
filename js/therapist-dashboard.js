@@ -146,9 +146,9 @@ function filterClients() {
     });
 }
 
-function viewClientAttendance(customerId) {
-    const customer = getUserById(customerId);
-    const records = getAttendanceRecords({ customerId });
+async function viewClientAttendance(customerId) {
+    const customer = await getUserById(customerId);
+    const records = await getAttendanceRecords({ customerId });
     
     const modal = document.getElementById('viewAttendanceModal');
     const content = document.getElementById('attendanceRecordsContent');
@@ -324,16 +324,16 @@ async function loadCalendarEvents() {
 }
 
 // ===== ATTENDANCE MODAL =====
-function openAttendanceModal(customerId, date) {
-    const customer = getUserById(customerId);
-    
+async function openAttendanceModal(customerId, date) {
+    const customer = await getUserById(customerId);
+
     document.getElementById('attendanceCustomerId').value = customerId;
     document.getElementById('attendanceClientName').value = customer.name;
     document.getElementById('attendanceDate').value = date;
     document.getElementById('attendanceRecordId').value = '';
-    
+
     // Check existing records for this date
-    const existingRecords = getAttendanceByDate(customerId, date);
+    const existingRecords = await getAttendanceByDate(customerId, date);
     const hasBiolite = existingRecords.some(r => r.therapyType === 'Biolite');
     const hasTerahertz = existingRecords.some(r => r.therapyType === 'Terahertz');
     

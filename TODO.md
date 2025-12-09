@@ -15,13 +15,14 @@
 
 ## Current Status
 - Server.js updated to use only MongoDB (connection options fixed)
-- js/data.js updated to use API calls
+- js/data.js updated to use API calls (auth functions now use API calls with JWT tokens)
 - js/therapist-dashboard.js updated to use async API calls
 - js/auth.js updated to use async API calls
 - js/customer-dashboard.js updated to use async API calls
 - MongoDB Atlas connection configured and server running
 - API testing in progress: Registration and login endpoints verified working
-- Checkpoint: Basic API functionality confirmed, ready for full testing
+- Checkpoint: Auth functions fixed to use API calls instead of localStorage
+- Next: Test registration from different devices to confirm data sync
 
 ## Next Steps (After Checkpoint)
 - [x] Complete attendance data testing
