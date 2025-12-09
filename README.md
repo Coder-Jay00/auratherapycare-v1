@@ -4,7 +4,7 @@ A professional, secure, and fully responsive web application for managing client
 
 ## 🎯 Project Overview
 
-**Project Name:** AuraTheracare  
+**Project Name:** AuraTherapyCare
 **Purpose:** Healthcare practitioners can efficiently manage therapy sessions and billing, while clients can track their attendance and export monthly invoices.
 
 **Target Audience:** Healthcare practitioners (Therapists) and their clients (Customers)
@@ -90,7 +90,7 @@ All test customer accounts use the password: **password123**
 ## 📁 Project Structure
 
 ```
-AuraTheracare/
+AuraTherapyCare/
 ├── index.html                    # Login page
 ├── register.html                 # Customer registration page
 ├── therapist-dashboard.html      # Therapist interface
@@ -291,7 +291,7 @@ This project is created for healthcare practice management. Free to use and modi
 
 ## 👨‍💻 Developer Information
 
-**Developed for:** AuraTheracare Healthcare Services  
+**Developed for:** AuraTherapyCare Healthcare Services
 **Version:** 1.0.0  
 **Last Updated:** December 2024
 

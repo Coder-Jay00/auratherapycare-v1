@@ -1,4 +1,4 @@
-# 🌟 AuraTheracare - Features Showcase
+# 🌟 AuraTherapyCare - Features Showcase
 
 ## 🎯 Main Features Overview
 
@@ -218,7 +218,7 @@ Session Details:
                         │      ₹2,400      │
                         └──────────────────┘
 
-Thank you for choosing AuraTheracare
+Thank you for choosing AuraTherapyCare
 ═══════════════════════════════════════════════════════
 ```
 

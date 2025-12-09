@@ -1,4 +1,4 @@
-# 🚀 Deploy AuraTheracare to GitHub Pages
+# 🚀 Deploy AuraTherapyCare to GitHub Pages
 
 This guide provides step-by-step instructions to deploy your AuraTheracare application to GitHub Pages for free hosting.
 
@@ -164,6 +164,6 @@ If you encounter issues:
 
 ---
 
-**🎉 Congratulations! Your AuraTheracare application is now live on GitHub Pages!**
+**🎉 Congratulations! Your AuraTherapyCare application is now live on GitHub Pages!**
 
 Share your site URL with users and start managing therapy attendance online.

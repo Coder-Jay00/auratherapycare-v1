@@ -1,4 +1,4 @@
-// AuraTheracare - Customer Dashboard
+// AuraTherapyCare - Customer Dashboard
 // Manages customer interface, attendance viewing, and monthly invoice export
 
 let currentUser = null;
@@ -358,7 +358,7 @@ function generateInvoicePDF(invoiceData) {
     doc.setFontSize(9);
     doc.setFont(undefined, 'italic');
     doc.setTextColor(100, 100, 100);
-    doc.text('Thank you for choosing AuraTheracare for your therapy needs.', pageWidth / 2, footerY, { align: 'center' });
+    doc.text('Thank you for choosing AuraTherapyCare for your therapy needs.', pageWidth / 2, footerY, { align: 'center' });
     doc.text('For any queries, please contact your therapist.', pageWidth / 2, footerY + 5, { align: 'center' });
     
     // Add page border

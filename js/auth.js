@@ -1,4 +1,4 @@
-// AuraTheracare - Authentication
+// AuraTherapyCare - Authentication
 // Handles login and registration functionality
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -1,4 +1,4 @@
-// AuraTheracare - Data Management
+// AuraTherapyCare - Data Management
 // This file handles all data storage and retrieval using API calls to the server
 
 // Pricing Configuration
