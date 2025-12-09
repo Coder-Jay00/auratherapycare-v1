@@ -63,12 +63,6 @@ A professional, secure, and fully responsive web application for managing client
 ## 🔑 Login Credentials
 
 ### Admin/Therapist Account (Pre-configured)
-```
-Email: coderjt25@gmail.com
-Password: jayadmin2024
-Name: Jay Thakkar
-Role: Therapist (Full Access)
-```
 
 ### Test Customer Accounts
 All test customer accounts use the password: **password123**
@@ -135,7 +129,7 @@ npx http-server
 
 1. **Login**
    - Go to the login page
-   - Use admin credentials: coderjt25@gmail.com / jayadmin2024
+   - Use admin credentials
 
 2. **View Clients**
    - Dashboard shows all registered clients
