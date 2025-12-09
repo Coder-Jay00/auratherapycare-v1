@@ -12,7 +12,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Change in pro
 
 // Middleware
 app.use(cors({
-  origin: true,
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 app.use(bodyParser.json());
