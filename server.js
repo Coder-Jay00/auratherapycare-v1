@@ -133,7 +133,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Register
-app.post('/api/register', (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { name, email, password, phone } = req.body;
 
   if (!name || !email || !password) {
@@ -144,44 +144,41 @@ app.post('/api/register', (req, res) => {
     return res.status(400).json({ error: 'Password must be at least 6 characters long' });
   }
 
-  db.get('SELECT id FROM users WHERE email = ?', [email], (err, existingUser) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error' });
-    }
-
+  try {
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: 'Email already registered' });
     }
 
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) {
-        return res.status(500).json({ error: 'Password hashing error' });
-      }
-
-      db.run('INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, ?)',
-        [name, email, hashedPassword, phone, 'customer'], function(err) {
-        if (err) {
-          return res.status(500).json({ error: 'User registration failed' });
-        }
-
-        const token = jwt.sign(
-          { id: this.lastID, email, role: 'customer', name },
-          JWT_SECRET,
-          { expiresIn: '24h' }
-        );
-
-        res.status(201).json({
-          token,
-          user: {
-            id: this.lastID,
-            name,
-            email,
-            role: 'customer'
-          }
-        });
-      });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      role: 'customer'
     });
-  });
+
+    const savedUser = await newUser.save();
+
+    const token = jwt.sign(
+      { id: savedUser._id, email, role: 'customer', name },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      token,
+      user: {
+        id: savedUser._id,
+        name,
+        email,
+        role: 'customer'
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'User registration failed' });
+  }
 });
 
 // Get all users (therapist only)
@@ -199,16 +196,16 @@ app.get('/api/users', authenticateToken, (req, res) => {
 });
 
 // Get user profile
-app.get('/api/profile', authenticateToken, (req, res) => {
-  db.get('SELECT id, name, email, phone, role, created_at FROM users WHERE id = ?', [req.user.id], (err, user) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error' });
-    }
+app.get('/api/profile', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id, 'name email phone role created_at');
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     res.json(user);
-  });
+  } catch (err) {
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 // Add attendance (therapist only)
