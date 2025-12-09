@@ -11,7 +11,10 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Change in production
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
