@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Change in production
 
 // Middleware
@@ -20,35 +19,61 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
-// Database setup
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/').then(() => {
-  console.log('Connected to MongoDB Atlas.');
-  initializeDatabase();
-}).catch(err => {
-  console.error('Error connecting to MongoDB:', err.message);
-});
+// Database connection cache for serverless
+let cachedDb = null;
+let User = null;
+let Attendance = null;
 
-// Define MongoDB schemas
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  phone: String,
-  role: { type: String, required: true, default: 'customer' },
-  created_at: { type: Date, default: Date.now }
-});
+async function connectToDatabase() {
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    return cachedDb;
+  }
 
-const attendanceSchema = new mongoose.Schema({
-  customer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  date: { type: String, required: true },
-  therapy_type: { type: String, required: true },
-  price: { type: Number, required: true },
-  recorded_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  recorded_at: { type: Date, default: Date.now }
-});
+  try {
+    if (!cachedDb) {
+      cachedDb = await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      });
+      console.log('Connected to MongoDB Atlas.');
+    }
 
-const User = mongoose.model('User', userSchema);
-const Attendance = mongoose.model('Attendance', attendanceSchema);
+    // Define models only once
+    if (!User) {
+      const userSchema = new mongoose.Schema({
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        phone: String,
+        role: { type: String, required: true, default: 'customer' },
+        created_at: { type: Date, default: Date.now }
+      });
+
+      const attendanceSchema = new mongoose.Schema({
+        customer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        date: { type: String, required: true },
+        therapy_type: { type: String, required: true },
+        price: { type: Number, required: true },
+        recorded_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        recorded_at: { type: Date, default: Date.now }
+      });
+
+      User = mongoose.model('User', userSchema);
+      Attendance = mongoose.model('Attendance', attendanceSchema);
+
+      // Initialize database
+      await initializeDatabase();
+    }
+
+    return cachedDb;
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err.message);
+    throw err;
+  }
+}
 
 // Initialize database
 async function initializeDatabase() {
@@ -104,6 +129,7 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -130,6 +156,7 @@ app.post('/api/login', async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -147,6 +174,7 @@ app.post('/api/register', async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: 'Email already registered' });
@@ -179,6 +207,7 @@ app.post('/api/register', async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Register error:', err);
     res.status(500).json({ error: 'User registration failed' });
   }
 });
@@ -190,9 +219,11 @@ app.get('/api/users', authenticateToken, async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const users = await User.find({}, 'name email phone role created_at').sort({ name: 1 });
     res.json(users);
   } catch (err) {
+    console.error('Get users error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -200,12 +231,14 @@ app.get('/api/users', authenticateToken, async (req, res) => {
 // Get user profile
 app.get('/api/profile', authenticateToken, async (req, res) => {
   try {
+    await connectToDatabase();
     const user = await User.findById(req.user.id, 'name email phone role created_at');
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     res.json(user);
   } catch (err) {
+    console.error('Get profile error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -224,6 +257,7 @@ app.delete('/api/users/:userId', authenticateToken, async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -237,6 +271,7 @@ app.delete('/api/users/:userId', authenticateToken, async (req, res) => {
 
     res.json({ message: 'User and associated data deleted successfully' });
   } catch (err) {
+    console.error('Delete user error:', err);
     res.status(500).json({ error: 'Failed to delete user' });
   }
 });
@@ -254,6 +289,7 @@ app.post('/api/attendance', authenticateToken, async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const attendance = new Attendance({
       customer_id: customerId,
       date,
@@ -268,6 +304,7 @@ app.post('/api/attendance', authenticateToken, async (req, res) => {
       message: 'Attendance added successfully'
     });
   } catch (err) {
+    console.error('Add attendance error:', err);
     res.status(500).json({ error: 'Failed to add attendance' });
   }
 });
@@ -282,11 +319,13 @@ app.get('/api/attendance/:customerId', authenticateToken, async (req, res) => {
   }
 
   try {
+    await connectToDatabase();
     const records = await Attendance.find({ customer_id: customerId })
       .populate('recorded_by', 'name')
       .sort({ date: -1 });
     res.json(records);
   } catch (err) {
+    console.error('Get attendance error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -325,6 +364,7 @@ app.get('/api/revenue/:month/:year', authenticateToken, async (req, res) => {
   const endDate = new Date(year, month, 0).toISOString().split('T')[0];
 
   try {
+    await connectToDatabase();
     const customers = await User.find({ role: 'customer' }).sort({ name: 1 });
 
     const revenue = [];
@@ -358,18 +398,25 @@ app.get('/api/revenue/:month/:year', authenticateToken, async (req, res) => {
 
     res.json({ revenue, totals });
   } catch (err) {
+    console.error('Get revenue error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export for Vercel serverless functions
+module.exports = app;
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  await mongoose.connection.close();
-  console.log('Database connection closed.');
-  process.exit(0);
-});
+// For local development
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
+  // Graceful shutdown
+  process.on('SIGINT', async () => {
+    await mongoose.connection.close();
+    console.log('Database connection closed.');
+    process.exit(0);
+  });
+}
