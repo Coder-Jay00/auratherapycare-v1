@@ -10,17 +10,6 @@
 - Customer self-registration
 - Session management with localStorage
 
-**How to use:**
-```
-Therapist Login:
-Email: coderjt25@gmail.com
-Password: jayadmin2024
-
-Customer Login:
-Email: priya@example.com (or any test customer)
-Password: password123
-```
-
 **Visual Elements:**
 - Clean login form with calming blue/green theme
 - Subtle admin note for therapists
@@ -111,9 +100,6 @@ Terahertz Sessions:
 **Client-wise Breakdown:**
 | Client | Biolite | Terahertz | Total Sessions | Amount |
 |--------|---------|-----------|----------------|--------|
-| Priya Sharma | 4 | 3 | 7 | ₹2,400 |
-| Rahul Mehta | 5 | 4 | 9 | ₹3,100 |
-| ... | ... | ... | ... | ... |
 
 ---
 
@@ -123,7 +109,7 @@ Terahertz Sessions:
 
 **Welcome Section:**
 ```
-Welcome, Priya Sharma!
+Welcome !
 Track your therapy sessions and monthly billing
 ```
 
@@ -209,7 +195,7 @@ Terahertz (₹400)                                        ₹400
 Patient Information:
 Name: Priya Sharma
 Email: priya@example.com
-Phone: +91 98765 11111
+Phone: 
 
 Invoice Period: November 2024
 Generated on: 05-Dec-2024
