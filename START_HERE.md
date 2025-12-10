@@ -16,14 +16,14 @@ Use these credentials to log in:
 
 **🔑 Therapist/Admin Account:**
 ```
-Email: 
-Password: 
+For security reasons, credentials have been removed.
+Contact your system administrator for access.
 ```
 
 **🔑 Customer Account (to test customer view):**
 ```
-Email: priya@example.com
-Password: password123
+Create new accounts via the registration page.
+Test credentials removed for security.
 ```
 
 ### Step 3: Explore!
@@ -140,9 +140,9 @@ See all sessions at a glance!
 ## 🆘 Having Issues?
 
 ### Can't Login?
-- Make sure you're using the exact credentials (copy-paste them)
-- Email:
-- Password:
+- Contact your system administrator for credentials
+- Ensure you're using the correct email format
+- Check that credentials are configured properly
 
 ### Not Seeing Data?
 - The app comes pre-loaded with 5 test customers and sample sessions
@@ -236,12 +236,10 @@ Everything is configured, tested, and ready to go. The application includes:
 ├─────────────────────────────────────────────────────┤
 │                                                     │
 │  🔐 THERAPIST LOGIN:                                │
-│  Email:                                             │
-│  Password:                                          │
+│  Contact administrator for credentials              │
 │                                                     │
 │  🔐 CUSTOMER LOGIN (TEST):                          │
-│  Email: priya@example.com                           │
-│  Password: password123                              │
+│  Create via registration page                       │
 │                                                     │
 │  💰 THERAPY PRICING:                                │
 │  Biolite: ₹300 per session                         │

@@ -96,7 +96,7 @@ git push
 
 ### Test Checklist:
 
-- [ ] **Admin Login**: `coderjt25@gmail.com` / `jayadmin2024`
+- [ ] **Admin Login**: Use configured admin credentials
 - [ ] **Customer Registration**: Try registering a new customer
 - [ ] **Dashboard Access**: Verify therapist dashboard loads
 - [ ] **Data Persistence**: Add a customer and refresh page

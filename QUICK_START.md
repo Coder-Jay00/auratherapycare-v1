@@ -1,24 +1,22 @@
 # 🚀 AuraTheracare - Quick Start Guide
 
-## 📋 Login Credentials (Ready to Use!)
+## 📋 Login Credentials
 
 ### 👨‍⚕️ Therapist/Admin Account
-```
-📧 Email: 
-🔑 Password: 
-👤 Name: 
-```
+**For security reasons, admin credentials have been removed from this documentation.**
+
+To obtain admin access:
+- Contact your system administrator
+- Configure credentials via environment variables
+- See `DEPLOYMENT_GUIDE.md` for setup instructions
 
 ### 👥 Test Customer Accounts
-All use password: **password123**
+**Test account credentials have been removed for security.**
 
-| Name | Email |
-|------|-------|
-| Priya Sharma | priya@example.com |
-| Rahul Mehta | rahul@example.com |
-| Anjali Patel | anjali@example.com |
-| Vikram Singh | vikram@example.com |
-| Sneha Desai | sneha@example.com |
+For testing:
+- Create new customer accounts via the registration page
+- Use the registration form at `/register.html`
+- All new accounts are created with customer role
 
 ## ⚡ 3-Minute Setup
 
@@ -56,8 +54,9 @@ Simply open `index.html` in your web browser. That's it! No installation needed.
 ### Step 4: Login as Customer
 ```
 1. Logout (top-right button)
-2. Login with: priya@example.com / password123
-3. See customer dashboard with attendance and invoices
+2. Create a new customer account via registration
+3. Login with your new credentials
+4. See customer dashboard with attendance and invoices
 ```
 
 ### Step 5: Export Invoice (If Available)

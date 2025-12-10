@@ -62,30 +62,21 @@ A professional, secure, and fully responsive web application for managing client
 
 ## 🔑 Login Credentials
 
-### Admin/Therapist Account (Pre-configured)
+### Admin/Therapist Account
+**For security reasons, admin credentials have been removed from this documentation.**
+
+To set up admin access:
+1. Configure admin credentials via environment variables
+2. Contact your system administrator for access
+3. See `DEPLOYMENT_GUIDE.md` for setup instructions
 
 ### Test Customer Accounts
-All test customer accounts use the password: **password123**
+**Test account credentials have been removed for security.**
 
-1. **Priya Sharma**
-   - Email: priya@example.com
-   - Password: password123
-
-2. **Rahul Mehta**
-   - Email: rahul@example.com
-   - Password: password123
-
-3. **Anjali Patel**
-   - Email: anjali@example.com
-   - Password: password123
-
-4. **Vikram Singh**
-   - Email: vikram@example.com
-   - Password: password123
-
-5. **Sneha Desai**
-   - Email: sneha@example.com
-   - Password: password123
+For testing purposes:
+- Create new customer accounts via the registration page
+- Use the registration form at `/register.html`
+- All new accounts are created with customer role by default
 
 ## 📁 Project Structure
 
@@ -309,7 +300,7 @@ A: Export becomes available only from the 4th day of each month for the previous
 A: Data is stored in localStorage. Clearing browser data will remove all records.
 
 **Q: Can't login as therapist**  
-A: Use the exact credentials: coderjt25@gmail.com / jayadmin2024
+A: Contact your system administrator for the correct admin credentials
 
 **Q: Multiple sessions not showing**  
 A: Calendar shows a badge with session count. Click "View" to see all sessions for a date.

@@ -36,9 +36,9 @@
 ## 🔐 Security & Access
 
 ### Admin Account (Pre-configured)
-- **Email**: 
-- **Password**:
+- **Credentials**: Configured via environment variables
 - **Role**: Therapist (Full administrative access)
+- **Access**: Contact system administrator for credentials
 
 ### Customer Access
 - Self-registration through web interface

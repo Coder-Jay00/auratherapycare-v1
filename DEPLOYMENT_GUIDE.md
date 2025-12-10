@@ -5,7 +5,7 @@ This guide will help you deploy the AuraTheracare application to various hosting
 ## 📋 Prerequisites
 
 - All project files ready (HTML, CSS, JS)
-- Admin credentials configured (`coderjt25@gmail.com` / `jayadmin2024`)
+- Admin credentials configured via environment variables
 - No backend required (uses localStorage)
 
 ## 🌐 Hosting Options
@@ -162,7 +162,7 @@ This guide will help you deploy the AuraTheracare application to various hosting
 
 ## 🔧 Post-Deployment Checklist
 
-- [ ] Test admin login: `coderjt25@gmail.com` / `jayadmin2024`
+- [ ] Test admin login with configured credentials
 - [ ] Test customer registration
 - [ ] Test logout functionality
 - [ ] Test attendance logging
@@ -179,7 +179,7 @@ This guide will help you deploy the AuraTheracare application to various hosting
 - Not suitable for multi-user environments
 
 ### Security Considerations
-- Passwords stored in plain text (demo only)
+- Passwords hashed with bcrypt for security
 - No HTTPS required for localStorage
 - For production: implement proper backend
 
