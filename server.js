@@ -53,12 +53,15 @@ async function connectToDatabase() {
 
   try {
     if (!cachedDb) {
-      cachedDb = await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/', {
+      const uri = process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/';
+      cachedDb = await mongoose.connect(uri, {
         maxPoolSize: 5,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
       });
-      console.log('Connected to MongoDB Atlas.');
+      const dbName = mongoose.connection.name;
+      const target = uri.startsWith('mongodb+srv://') ? 'Atlas SRV' : 'Direct host';
+      console.log(`MongoDB connected: db="${dbName}", target=${target}`);
     }
 
     // Define models only once
