@@ -294,9 +294,10 @@ function generateInvoicePDF(invoiceData) {
     sortedDates.forEach(date => {
         const dayRecords = recordsByDate[date];
         dayRecords.forEach(record => {
+            const therapy = record.therapyType || record.therapy_type;
             tableData.push([
                 formatDate(record.date),
-                record.therapyType,
+                String(therapy),
                 `₹${record.price.toLocaleString('en-IN')}`
             ]);
         });
