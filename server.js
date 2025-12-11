@@ -53,7 +53,7 @@ async function connectToDatabase() {
 
   try {
     if (!cachedDb) {
-      const uri = process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/';
+      const uri = process.env.MONGODB_URI || 'mongodb+srv://coderjt25_db_user:FEFg67BbbS0Y9kZ5@auratherapycare.yynkfxs.mongodb.net/auracare?retryWrites=true&w=majority';
       cachedDb = await mongoose.connect(uri, {
         maxPoolSize: 5,
         serverSelectionTimeoutMS: 5000,
