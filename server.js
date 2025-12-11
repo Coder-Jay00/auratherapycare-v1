@@ -56,7 +56,7 @@ async function connectToDatabase() {
       if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
         throw new Error('MONGODB_URI missing in production environment');
       }
-      const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auracare';
+      const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auratherapycare';
       cachedDb = await mongoose.connect(uri, {
         maxPoolSize: 5,
         serverSelectionTimeoutMS: 5000,
