@@ -20,6 +20,10 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 const sseClients = new Set();
 function broadcast(event, data) {
   const msg = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
@@ -49,6 +53,14 @@ if (!isServerless) {
   });
 }
 
+app.get('/api/health', async (req, res) => {
+  try {
+    await connectToDatabase();
+    res.json({ ok: true, db: mongoose.connection.name, state: mongoose.connection.readyState });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
 // Database connection cache for serverless
 let cachedDb = null;
 let User = null;
@@ -459,4 +471,3 @@ if (require.main === module) {
     process.exit(0);
   });
 }
-module.exports = app;
