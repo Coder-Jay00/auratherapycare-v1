@@ -7,8 +7,13 @@ const THERAPY_PRICES = {
     'Terahertz': 400
 };
 
-// API Base URL - Update this to match your server URL
-const API_BASE = 'http://localhost:3000';
+function resolveApiBase() {
+    const override = window.__API_BASE__ || localStorage.getItem('API_BASE');
+    if (override) return override;
+    const origin = window.location.origin;
+    return origin;
+}
+const API_BASE = resolveApiBase();
 
 // Helper function to get auth token
 function getAuthToken() {
@@ -31,7 +36,8 @@ async function apiCall(endpoint, options = {}) {
         headers: {
             ...defaultOptions.headers,
             ...options.headers
-        }
+        },
+        mode: 'cors'
     });
 
     if (!response.ok) {
