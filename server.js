@@ -454,6 +454,12 @@ app.get('/api/revenue/:month/:year', authenticateToken, async (req, res) => {
   }
 });
 
+// Global error handler (prevents function crashes)
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 // Export for Vercel serverless functions
 module.exports = app;
 
