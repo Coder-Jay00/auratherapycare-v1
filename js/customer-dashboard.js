@@ -176,27 +176,14 @@ function setupExportButton() {
     const exportAvailabilityText = document.getElementById('exportAvailabilityText');
     const exportNote = document.getElementById('exportNote');
     
-    const today = new Date();
-    const currentDate = today.getDate();
-    const isAvailable = isExportAvailable();
     const previousMonth = getPreviousMonth();
     
-    if (isAvailable) {
-        exportButton.disabled = false;
-        exportAvailabilityText.innerHTML = `
-            <i class="fas fa-check-circle" style="color: #66BB6A;"></i>
-            Export is available! Generate invoice for <strong>${previousMonth.name}</strong>
-        `;
-        exportNote.textContent = 'Click the button above to download your monthly invoice as PDF';
-    } else {
-        exportButton.disabled = true;
-        const daysUntil = 4 - currentDate;
-        exportAvailabilityText.innerHTML = `
-            <i class="fas fa-clock" style="color: #FFA726;"></i>
-            Export will be available on the 4th of this month (in ${daysUntil} day${daysUntil > 1 ? 's' : ''})
-        `;
-        exportNote.textContent = `Monthly invoices become available on the 4th of each month for the previous month's data`;
-    }
+    exportButton.disabled = false;
+    exportAvailabilityText.innerHTML = `
+        <i class="fas fa-check-circle" style="color: #66BB6A;"></i>
+        Export is available! Generate invoice for <strong>${previousMonth.name}</strong>
+    `;
+    exportNote.textContent = 'Click the button above to download your monthly invoice as PDF';
 }
 
 async function exportMonthlyInvoice() {
