@@ -19,11 +19,14 @@ function resolveApiBase() {
     var fromStorage = null;
     try { fromStorage = localStorage.getItem('API_BASE'); } catch(e) {}
     if (fromStorage) return fromStorage;
-    var meta = document.querySelector('meta[name=\"api-base\"]');
-    var fromMeta = meta && meta.getAttribute('content');
-    if (fromMeta) {
-        try { localStorage.setItem('API_BASE', fromMeta); } catch(e) {}
-        return fromMeta;
+    var isLocal = /^localhost$|^127\\.0\\.0\\.1$/.test(window.location.hostname);
+    if (!isLocal) {
+        var meta = document.querySelector('meta[name=\"api-base\"]');
+        var fromMeta = meta && meta.getAttribute('content');
+        if (fromMeta) {
+            try { localStorage.setItem('API_BASE', fromMeta); } catch(e) {}
+            return fromMeta;
+        }
     }
     return window.location.origin;
 }

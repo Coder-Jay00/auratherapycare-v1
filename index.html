@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-base" content="https://auratherapycare.vercel.app">
     <title>AuraTherapyCare - Login</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -78,11 +79,14 @@
                 var fromStorage = null;
                 try { fromStorage = localStorage.getItem('API_BASE'); } catch(e) {}
                 if (fromStorage) return fromStorage;
-                var meta = document.querySelector('meta[name="api-base"]');
-                var fromMeta = meta && meta.getAttribute('content');
-                if (fromMeta) {
-                    try { localStorage.setItem('API_BASE', fromMeta); } catch(e) {}
-                    return fromMeta;
+                var isLocal = /^localhost$|^127\\.0\\.0\\.1$/.test(window.location.hostname);
+                if (!isLocal) {
+                    var meta = document.querySelector('meta[name="api-base"]');
+                    var fromMeta = meta && meta.getAttribute('content');
+                    if (fromMeta) {
+                        try { localStorage.setItem('API_BASE', fromMeta); } catch(e) {}
+                        return fromMeta;
+                    }
                 }
                 return window.location.origin;
             }
