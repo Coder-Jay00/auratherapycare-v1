@@ -59,14 +59,37 @@
 
     <script>
         (function(){
-            var el=document.getElementById('runtimeStatus');
-            if(!el) return;
-            fetch('/api/health').then(function(r){return r.json()}).then(function(d){
-                if(!d.ok){el.textContent='Backend unavailable: '+(d.error||'');}
-            }).catch(function(){el.textContent='Backend unreachable';});
+            var el = document.getElementById('runtimeStatus');
+            function setStatus(msg, type){
+                if(!el) return;
+                el.classList.remove('error-message','success-message');
+                el.classList.add(type==='ok'?'success-message':'error-message','show');
+                el.textContent = el.textContent ? (el.textContent + ' • ' + msg) : msg;
+            }
+            function healthCheck(){
+                var controller = new AbortController();
+                var t = setTimeout(function(){controller.abort()}, 7000);
+                fetch('/api/health',{signal:controller.signal}).then(function(r){return r.json()}).then(function(d){
+                    clearTimeout(t);
+                    if(d && d.ok){ setStatus('Backend online', 'ok'); }
+                    else { setStatus('Backend unavailable: ' + (d && d.error ? d.error : 'unknown'), 'error'); }
+                }).catch(function(){
+                    clearTimeout(t);
+                    setStatus('Backend unreachable', 'error');
+                });
+            }
+            window.addEventListener('error', function(e){
+                var target = e.target || e.srcElement;
+                if(target && target.tagName === 'SCRIPT'){
+                    var name = target.getAttribute('src') || 'script';
+                    setStatus('Failed to load ' + name, 'error');
+                }
+            }, true);
+            healthCheck();
+            window.__runtimeStatusUpdate = setStatus;
         })();
     </script>
-    <script src="js/data.js" onerror="document.getElementById('runtimeStatus').textContent='Failed to load js/data.js'"></script>
-    <script src="js/auth.js" onerror="document.getElementById('runtimeStatus').textContent='Failed to load js/auth.js'"></script>
+    <script src="js/data.js" onerror="window.__runtimeStatusUpdate && window.__runtimeStatusUpdate('Failed to load js/data.js','error')"></script>
+    <script src="js/auth.js" onerror="window.__runtimeStatusUpdate && window.__runtimeStatusUpdate('Failed to load js/auth.js','error')"></script>
 </body>
 </html>
