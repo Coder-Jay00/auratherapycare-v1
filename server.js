@@ -9,6 +9,7 @@ const crypto = require('crypto');
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
+const isServerless = !!process.env.VERCEL || !!process.env.NOW_REGION;
 
 // Middleware
 app.use(cors({
@@ -18,7 +19,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname)));
+// Static file serving - only in local development (not supported in serverless)
+if (!isServerless) {
+  app.use(express.static(path.join(__dirname)));
+}
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -31,7 +35,6 @@ function broadcast(event, data) {
     try { res.write(msg); } catch (e) {}
   }
 }
-const isServerless = !!process.env.VERCEL || !!process.env.NOW_REGION;
 if (!isServerless) {
   app.get('/api/events', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -457,10 +460,19 @@ app.get('/api/revenue/:month/:year', authenticateToken, async (req, res) => {
 // Global error handler (prevents function crashes)
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(500).json({ error: 'Internal server error' });
+  if (!res.headersSent) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Handle unhandled promise rejections (critical for serverless)
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 // Export for Vercel serverless functions
+// Vercel's @vercel/node runtime expects the Express app to be exported directly
+// The app will be automatically wrapped by Vercel's runtime
 module.exports = app;
 
 // For local development
